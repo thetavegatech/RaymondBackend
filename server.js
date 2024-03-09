@@ -150,6 +150,26 @@ app.get("/api/hostaphcur", async (req, res) => {
   }
 });
 
+app.get("/api/mqttpressure", async (req, res) => {
+  try {
+    const allAirFeedPressureData = await MqttDataModel.find({}, { AirFeedPre: 1, _id: 0 }).sort({ _id: -1 }).limit(500);
+
+    if (allAirFeedPressureData.length === 0) {
+      return res.status(404).json({ error: "No MQTT data found" });
+    }
+
+    // Extracting only the values and removing null values
+    const airFeedPressureValues = allAirFeedPressureData
+      .map(data => data.AirFeedPre)
+      .filter(value => value !== null && value !== undefined);
+
+    res.status(200).json(airFeedPressureValues);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 
 

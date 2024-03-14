@@ -171,6 +171,35 @@ app.get("/api/mqttpressure", async (req, res) => {
 });
 
 
+app.get('/api/getdataall', async (req, res) => {
+  try {
+    let query = {};
+
+    // Check if startDate and endDate query parameters are provided
+    if (req.query.startDate && req.query.endDate) {
+      // Convert startDate and endDate strings to Date objects
+      const startDate = new Date(req.query.startDate);
+      const endDate = new Date(req.query.endDate);
+
+      // Add DateTime filter to the query
+      query = {
+        DateTime: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      };
+    }
+
+    // Fetch data based on the query and sort by DateTime in descending order
+    const data = await MqttDataModel.find(query).sort({ DateTime: -1 }).limit(2000);
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Error fetching data:', err);
+    res.status(500).json({ err: 'Internal Server Error' });
+  }
+});
+
 
 
 // Start the Express server

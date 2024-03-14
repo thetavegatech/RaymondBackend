@@ -25,6 +25,7 @@ const mqttDataSchema = new mongoose.Schema({
   AirFiltTIme: { type: Number },
   LubeOilTime: { type: Number },
   LubeGreaseT: { type: Number },
+  DateTime: { type: Date, default: Date.now },
 });
 
 const MqttDataModel = mongoose.model("MqttData", mqttDataSchema);

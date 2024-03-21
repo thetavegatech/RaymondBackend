@@ -221,22 +221,49 @@ app.get("/api/hostcurhighlow", async (req, res) => {
     });
 
     // Extracting only the HostAPhCur field from each record
-    const extractedData = response.map(record => record.HostAPhCur);
-       // Find minimum and maximum values
-       const minValue = Math.min(...extractedData);
-       const maxValue = Math.max(...extractedData);
+    const extractedHostAPhCur = response.map(record => record.HostAPhCur);
 
-    const airfeed = response.map(record => record.AirFeedPre)
+    // Extracting only the AirFeedPre field from each record
+    const extractedAirFeedPre = response.map(record => record.AirFeedPre);
 
-    const airmin = Math.min(...airfeed);
-    const airmax = Math.max(...airfeed)
-    
-    res.status(200).json({ curhostmin: minValue, curhostmax: maxValue , airmin: airmin, airmax : airmax });
+    // Extracting only the AirExstTemp field from each record
+    const extractedAirExstTemp = response.map(record => record.AirExstTemp);
+
+    // Find minimum, maximum, and average values for HostAPhCur
+    const minHostAPhCur = Math.min(...extractedHostAPhCur);
+    const maxHostAPhCur = Math.max(...extractedHostAPhCur);
+    const sumHostAPhCur = extractedHostAPhCur.reduce((acc, val) => acc + val, 0);
+    const avgHostAPhCur = (sumHostAPhCur / extractedHostAPhCur.length).toFixed(1);
+
+    // Find minimum, maximum, and average values for AirFeedPre
+    const minAirFeedPre = Math.min(...extractedAirFeedPre);
+    const maxAirFeedPre = Math.max(...extractedAirFeedPre);
+    const sumAirFeedPre = extractedAirFeedPre.reduce((acc, val) => acc + val, 0);
+    const avgAirFeedPre = (sumAirFeedPre / extractedAirFeedPre.length).toFixed(1);
+
+    // Find minimum, maximum, and average values for AirExstTemp
+    const minAirExstTemp = Math.min(...extractedAirExstTemp);
+    const maxAirExstTemp = Math.max(...extractedAirExstTemp);
+    const sumAirExstTemp = extractedAirExstTemp.reduce((acc, val) => acc + val, 0);
+    const avgAirExstTemp = (sumAirExstTemp / extractedAirExstTemp.length).toFixed(1);
+
+    res.status(200).json({ 
+      curhostmin: minHostAPhCur, 
+      curhostmax: maxHostAPhCur, 
+      curhostavg: avgHostAPhCur, 
+      airmin: minAirFeedPre, 
+      airmax: maxAirFeedPre,
+      airavg: avgAirFeedPre,
+      airtmpmin: minAirExstTemp,
+      airtmpmax: maxAirExstTemp,
+      airtmpavg: avgAirExstTemp
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Internal Server Error' });
   } 
 });
+
 
 
 

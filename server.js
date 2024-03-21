@@ -69,7 +69,8 @@ const port = 5002;
 
 // Connect to MongoDB
 
-const url ="mongodb+srv://thetavegaacc:Thetavegatech@cluster0.1p9ushl.mongodb.net/?retryWrites=true&w=majority"
+ const url ="mongodb+srv://thetavegaacc:Thetavegatech@cluster0.1p9ushl.mongodb.net/?retryWrites=true&w=majority"
+//  const url = "mongodb://localhost:27017/MqttdataRaymond"
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -198,6 +199,43 @@ app.get('/api/getdataall', async (req, res) => {
     console.error('Error fetching data:', err);
     res.status(500).json({ err: 'Internal Server Error' });
   }
+});
+
+
+app.get("/api/hostcurhighlow", async (req, res) => {
+  try {
+    // Get the current date
+    const today = new Date();
+
+    // Set the time to the beginning of the day (midnight)
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+
+    // Set the time to the end of the day (just before midnight of the next day)
+    const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 0, 0, 0);
+
+    const response = await MqttDataModel.find({
+      DateTime: {
+        $gte: startOfToday,
+        $lt: endOfToday
+      }
+    });
+
+    // Extracting only the HostAPhCur field from each record
+    const extractedData = response.map(record => record.HostAPhCur);
+       // Find minimum and maximum values
+       const minValue = Math.min(...extractedData);
+       const maxValue = Math.max(...extractedData);
+
+    const airfeed = response.map(record => record.AirFeedPre)
+
+    const airmin = Math.min(...airfeed);
+    const airmax = Math.max(...airfeed)
+    
+    res.status(200).json({ curhostmin: minValue, curhostmax: maxValue , airmin: airmin, airmax : airmax });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } 
 });
 
 

@@ -15,8 +15,8 @@ const port = 5002;
 
 // Connect to MongoDB
 
-    // const url ="mongodb+srv://thetavegaacc:Thetavegatech@cluster0.1p9ushl.mongodb.net/?retryWrites=true&w=majority"
-   const url = "mongodb://localhost:27017/MqttdataRaymond"
+    const url ="mongodb+srv://thetavegaacc:Thetavegatech@cluster0.1p9ushl.mongodb.net/?retryWrites=true&w=majority"
+  //  const url = "mongodb://localhost:27017/MqttdataRaymond"
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

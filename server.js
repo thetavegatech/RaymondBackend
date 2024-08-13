@@ -16,7 +16,7 @@ const port = 5002;
 // Connect to MongoDB
 
     const url ="mongodb+srv://thetavegaacc:Thetavegatech@cluster0.1p9ushl.mongodb.net/?retryWrites=true&w=majority"
-  //  const url = "mongodb://localhost:27017/MqttdataRaymond"
+    // const url = "mongodb://localhost:27017/MqttdataRaymond"
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -473,8 +473,8 @@ function sendMail(to, subject, text, attachmentPath) {
 // API endpoint to fetch the latest record and send the email
 cron.schedule('0 18 * * *', async () => {
   try {
-    const startTime = moment.tz('UTC').set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
-    const endTime = moment.tz('UTC').set({ hour: 12, minute: 30, second: 0, millisecond: 0 });
+    const startTime = moment.tz('UTC').set({ hour: 11, minute: 30, second: 0, millisecond: 0 });
+    const endTime = moment.tz('UTC').set({ hour: 12, minute: 45, second: 0, millisecond: 0 });
 
     const latestRecord = await MqttDataModel.findOne({
       "DateTime": {
@@ -498,7 +498,7 @@ cron.schedule('0 18 * * *', async () => {
       const subject = "Latest Record Data";
       const text = "Please find the latest record data attached in Excel format.";
 
-      sendMail("Gajrajsingh.Narde@Raymond.in", subject, text, filePath);
+      sendMail("gajrajsingh.narde@raymond.in", subject, text, filePath);
 
       console.log('Email sent with latest record data.');
     } else {
